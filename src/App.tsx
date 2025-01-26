@@ -1,27 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import InventoryPage from './pages/InventoryPage';
+import OrdersPage from './pages/OrdersPage';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  // Función de login
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
-    <>
-      <a href="https://react.dev" target="_blank">
-        <img src={reactLogo} className="logo react mx-auto" alt="React logo" />
-      </a>
-      <h1 className="text-3xl font-bold text-rose-300">¡Bienvenido a La Femme!</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
+    <Router>
+      <Routes>
+        {/* Ruta para Login */}
+        <Route path="/" element={<Login onLogin={handleLogin} />} />
 
-      <div className="text-center p-10">
+        {/* Ruta para las páginas con Sidebar, solo si el usuario está logueado */}
+        {isLoggedIn ? (
+          <>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/inventario" element={<InventoryPage />} />
+            <Route path="/ordenes" element={<OrdersPage />} />
+          </>
+        ) : (
+          <Route path="/" element={<Login onLogin={handleLogin} />} />
+        )}
+      </Routes>
+    </Router>
+  );
+};
 
-      </div>
-    </>
-  )
-}
-
-export default App
+export default App;
